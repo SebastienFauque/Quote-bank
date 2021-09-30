@@ -7,6 +7,7 @@ controller.getQuotes = async (req, res, next) => {
 
   try {
     const result = await db.query(query);
+    console.log(result.rows);
     res.locals.allQuotes = result.rows;
     return next();
   } catch (error) {
@@ -18,6 +19,23 @@ controller.getQuotes = async (req, res, next) => {
   }
 };
 
+controller.getIndex = async (req, res, next) => {
+  const query = `SELECT COUNT(*) FROM quotes;`;
+  console.log(`hit controller.getIndex`);
+  try {
+    const result = await db.query(query);
+    console.log( `index result:`, result.rows[0].count);
+    res.locals.index = Number(result.rows[0].count) + 1;
+    return next();
+  } catch (error) {
+    return next({
+      log: `Error in getIndex middleware: ${error}`,
+      status: 500,
+      message: { error: 'Error in getIndex, didnt get a index.' }
+    })
+  }
+}
+
 controller.postQuote = async (req, res, next) => {
   const query = `INSERT INTO quotes (
     _id,
@@ -27,13 +45,17 @@ controller.postQuote = async (req, res, next) => {
   VALUES ($1, $2, $3);
   `;
 
+  console.log('controller req.body', req.body);
+  console.log(`did I get the index?: `, res.locals.index)
+
   try {
       // Get length of quotes table
       // Add the length of the quotes table to the '_id' AS $1
       // Add the name as $2
       // Add the quote as $3
-      const info = []; //! put req info here as string with single quotes
+      const info = [res.locals.index, req.body.name, req.body.quote]; //! put req info here as string with single quotes
       const result = await db.query(query, info);
+      // res.redirect('/');
       return next();
   } catch (error) {
     return next({
