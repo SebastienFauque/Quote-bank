@@ -7,8 +7,12 @@ const controller = require('./controller');
 console.log("🚀🚀🚀🚀🚀 ~ file: server.js ~ line 6 ~ HELLO SEB");
 
 // Serve static html/CSS that is in the client folder
-app.use('/quotes', express.static(path.join(__dirname, './../client/')));
+// app.use('/quotes', express.static(path.join(__dirname, './../client/')));
 
+
+app.get('/', (req, res) => {
+  res.status(200).sendFile(path.join(__dirname + './../client/index.html'));
+})
 
 
 
