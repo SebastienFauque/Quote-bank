@@ -222,3 +222,8 @@ for (let i = 0; i < quotesArray.length; i++) {
 quotesArray.forEach( array => {
   quotesObj[array[1]] = array[0];
 });
+
+let namesArray = [];
+quotesArray.forEach(array => {
+  namesArray.push(array[1]);
+});
