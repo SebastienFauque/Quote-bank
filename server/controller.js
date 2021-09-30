@@ -21,10 +21,10 @@ controller.getQuotes = async (req, res, next) => {
 
 controller.getIndex = async (req, res, next) => {
   const query = `SELECT COUNT(*) FROM quotes;`;
-  console.log(`hit controller.getIndex`);
+  // console.log(`hit controller.getIndex`);
   try {
     const result = await db.query(query);
-    console.log( `index result:`, result.rows[0].count);
+    // console.log( `index result:`, result.rows[0].count);
     res.locals.index = Number(result.rows[0].count) + 1;
     return next();
   } catch (error) {
