@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Motivational quotes!</title>
+  <title>QuoteStore</title>
+  <script scr="./func.js"></script>
 </head>
 <Body>
-  <header>Motivational quotes!</header>
+  <header>Quote Store</header>
   <h1>Luminous beings we are, not this crud matter</h1>
   <form id="form" action="/quotes" method="POST" autocomplete="off">
     <input type="text" placeholder="name" name="name" />
@@ -16,11 +17,27 @@
     <button type="submit">Submit</button>
   </form>
 
+  <form id="delete_Form" action="/quotes" autocomplete="off">
+    <input type="text" placeholder="delete id number" name="delete_id" />
+    <button type="submit">Submit</button>
+  </form>
+
+  <form id="alter_form" action="/quotes" autocomplete="off">
+    <input type="text" placeholder="alter id number" name="alter_id" />
+    <input type="text" placeholder="alter name" name="alter_name" />
+    <input type="text" placeholder="alter quote" name="alter_quote" />
+    <button type="submit">Submit</button>
+  </form>
+
+
   <!-- <h2>Get a quote</h2>
   <button id="quotesButton" type=button>Get quote</button> -->
   <h2>All quotes</h2>
-  <div>
     <!-- Put some react here with all quotes -->
-  </div>
+  <div id="Quotes_container"></div>
+  <!-- Load react tags -->
+  <script scr="./func.js"></script>
+
+
 </Body>
 </html>

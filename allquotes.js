@@ -227,3 +227,6 @@ let namesArray = [];
 quotesArray.forEach(array => {
   namesArray.push(array[1]);
 });
+
+
+module.exports = quotesArray;

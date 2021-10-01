@@ -1,14 +1,17 @@
 const db = require('./model.js');
+const quotesArray = require('./../allquotes.js');
 
 const controller = {};
 
+// ? DONE
 controller.getQuotes = async (req, res, next) => {
   const query = `SELECT * FROM quotes;`;
 
   try {
     const result = await db.query(query);
-    console.log(result.rows);
+    console.log(`result.rows in getQuotes 🚀 🚀 🚀 🚀 🚀`, result.rows);
     res.locals.allQuotes = result.rows;
+    // res.render('index.ejs', { quotes: result.rows }); // Where should this go?
     return next();
   } catch (error) {
     return next({
@@ -19,15 +22,18 @@ controller.getQuotes = async (req, res, next) => {
   }
 };
 
+// ? DONE -FIXED
 controller.getIndex = async (req, res, next) => {
-  const query = `SELECT COUNT(*) FROM quotes;`;
+  // const query = `SELECT COUNT(*) FROM quotes;`;
+  const query = `SELECT MAX(_id) FROM quotes;`;
   // console.log(`hit controller.getIndex`);
   try {
     const result = await db.query(query);
-    // console.log( `index result:`, result.rows[0].count);
-    res.locals.index = Number(result.rows[0].count) + 1;
+    // console.log( `index result:`, result.rows);
+    res.locals.index = Number(result.rows[0].max) + 1;
     return next();
   } catch (error) {
+    console.log('it errored in getIndex', error);
     return next({
       log: `Error in getIndex middleware: ${error}`,
       status: 500,
@@ -36,6 +42,7 @@ controller.getIndex = async (req, res, next) => {
   }
 }
 
+// DONE
 controller.postQuote = async (req, res, next) => {
   const query = `INSERT INTO quotes (
     _id,
@@ -45,14 +52,7 @@ controller.postQuote = async (req, res, next) => {
   VALUES ($1, $2, $3);
   `;
 
-  console.log('controller req.body', req.body);
-  console.log(`did I get the index?: `, res.locals.index)
-
   try {
-      // Get length of quotes table
-      // Add the length of the quotes table to the '_id' AS $1
-      // Add the name as $2
-      // Add the quote as $3
       const info = [res.locals.index, req.body.name, req.body.quote]; //! put req info here as string with single quotes
       const result = await db.query(query, info);
       // res.redirect('/');
@@ -66,6 +66,8 @@ controller.postQuote = async (req, res, next) => {
   }
 }
 
+
+// ? BUG
 controller.updateQuote = async (req, res, next) => {
   const query =
   `UPDATE quotes
@@ -74,7 +76,7 @@ controller.updateQuote = async (req, res, next) => {
 
   try {
     // Get the info
-    const info = []; //! PUT THIS IN THE RIGHT ORDER AS SHOWN IN QUERY as string with single quotes
+    const info = [req.body.alter_name, req.body.alter_quote, req.body.alter_id]; //! PUT THIS IN THE RIGHT ORDER AS SHOWN IN QUERY as string with single quotes
     // Run the query
     const result = await db.query(query, info);
   } catch(error) {
@@ -86,12 +88,17 @@ controller.updateQuote = async (req, res, next) => {
   }
 };
 
-controller.deleteQuote = async (req, res, next) => {
-  const query = `DELETE FROM quotes WHERE _id=$1; `;
 
+// ? BUG
+controller.deleteQuote = async (req, res, next) => {
+  console.log(`IN DELETEQUOTE? 🚀 🚀 🚀 🚀 🚀 `);
+  console.log(`delete_id req body`, req.body.delete_id);
+  const query = `DELETE FROM quotes WHERE _id=$1; `;
+  console.log("🚀 ~ file: controller.js ~ line 98 ~ controller.deleteQuote ~ req.body.delete_id", req.body.delete_id)
   try {
     // Get id from req body
-    const info = []; //! must be string in single quotes
+    console.log("🚀 ~ file: controller.js ~ line 98 ~ controller.deleteQuote ~ req.body.delete_id", req.body.delete_id)
+    const info = [req.body.delete_id]; //! must be string in single quotes
     const result = await db.query(query, info);
   } catch(error) {
     return next({
